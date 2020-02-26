@@ -2,30 +2,19 @@ package com.sanha.overlaymemo;
 
 import android.app.Service;
 import android.content.ClipData;
-import android.content.ClipDescription;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.IBinder;
-import android.util.TypedValue;
-import android.view.ActionMode;
-import android.view.ContextMenu;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -33,9 +22,8 @@ import android.widget.Toast;
 
 import androidx.room.Room;
 
-import java.util.List;
-
-import static java.sql.Types.NULL;
+import com.sanha.overlaymemo.DB.AppDatabase;
+import com.sanha.overlaymemo.DB.Todo;
 
 public class MyService extends Service {
 

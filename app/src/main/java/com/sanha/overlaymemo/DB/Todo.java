@@ -1,4 +1,4 @@
-package com.sanha.overlaymemo;
+package com.sanha.overlaymemo.DB;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
