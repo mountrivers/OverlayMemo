@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     private InterstitialAd mInterstitialAd;
 
-    private  Button sizeDown, sizeUp, widthDown, widthUp, resetSize , bt_start, bt_stop;
+    private  Button sizeDown, sizeUp, widthDown, widthUp, resetSize , bt_start, bt_stop, help_button;
 
     public SharedPreferences spPref; public SharedPreferences.Editor spEditor;
 
@@ -178,6 +178,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+        help_button = (Button) findViewById(R.id.main_help_button);
+        help_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,HelpActivity.class);
+                startActivity(intent);
             }
         });
     }

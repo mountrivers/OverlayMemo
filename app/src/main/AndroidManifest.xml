@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sanha.overlaymemo">
 
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/memoicon"
@@ -9,10 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".HelpActivity"></activity>
         <!-- Sample AdMob App ID: ca-app-pub-3940256099942544~3347511713 -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-2294544540507821~9324759208"/>
+            android:value="ca-app-pub-2294544540507821~9324759208" />
 
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -21,13 +25,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <service
             android:name=".MyService"
             android:enabled="true"
-            android:permission="android.permission.SYSTEM_ALERT_WINDOW" >
-        </service>
+            android:permission="android.permission.SYSTEM_ALERT_WINDOW"></service>
     </application>
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
