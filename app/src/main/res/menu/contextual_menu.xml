@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/copy"
+        android:title="복사" />
+    <item
+        android:id="@+id/paste"
+        android:title="붙여넣기" />
+
+    <item
+        android:id="@+id/delete"
+        android:title="지우기" />
+</menu>
