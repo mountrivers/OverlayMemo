@@ -99,7 +99,6 @@ public class MyService extends Service {
         changeSize(intent.getExtras().getInt("textsize", 14));
         changeWidth(intent.getIntExtra("textwidth", 150));
         return super.onStartCommand(intent, flags, startId);
-
     }
 
 

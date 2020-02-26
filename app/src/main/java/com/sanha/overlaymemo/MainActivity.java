@@ -51,23 +51,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void checkPermission() {
-        Intent serviceIntent = new Intent(MainActivity.this,MyService.class);
 
-        int px = Math.round(TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, textWidth,r.getDisplayMetrics()));
-        serviceIntent.putExtra("textsize", textSize);
-        serviceIntent.putExtra("textwidth", px);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {   // 마시멜로우 이상일 경우
             if (!Settings.canDrawOverlays(this)) {              // 체크
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:" + getPackageName()));
                 startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
             } else {
-                startService(serviceIntent);
+                startAct();
             }
         } else {
-            startService(serviceIntent);
+            startAct();
         }
+    }
+    private void startAct(){
+        Intent serviceIntent = new Intent(MainActivity.this,MyService.class);
+
+        int px = Math.round(TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, textWidth,r.getDisplayMetrics()));
+        serviceIntent.putExtra("textsize", textSize);
+        serviceIntent.putExtra("textwidth", px);
+        startService(serviceIntent);
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -79,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                 // TODO 동의를 얻지 못했을 경우의 처리
 
             } else {
-                startService(new Intent(MainActivity.this, MyService.class));
+                startAct();
             }
         }
     }
