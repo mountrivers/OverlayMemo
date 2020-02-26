@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private  Button sizeDown, sizeUp, widthDown, widthUp, resetSize , bt_start, bt_stop, help_button;
 
     public SharedPreferences spPref; public SharedPreferences.Editor spEditor;
+    private Intent serviceIntent;
 
     public int textSize ,textWidth;
     public Resources r;
@@ -65,19 +66,34 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private void startAct(){
-        Intent serviceIntent = new Intent(MainActivity.this,MyService.class);
+
+        serviceIntent = new Intent(MainActivity.this,MyService.class);
 
         int px = Math.round(TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, textWidth,r.getDisplayMetrics()));
         serviceIntent.putExtra("textsize", textSize);
         serviceIntent.putExtra("textwidth", px);
-        startService(serviceIntent);
+
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+            mInterstitialAd.setAdListener(new AdListener(){
+                @Override
+                public void onAdClosed() {
+                    startService(serviceIntent);
+                }
+            });
+
+        }
+        else
+            startService(serviceIntent);
+
     }
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
             if (!Settings.canDrawOverlays(this)) {
                 // TODO 동의를 얻지 못했을 경우의 처리
@@ -163,17 +179,6 @@ public class MainActivity extends AppCompatActivity {
         bt_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mInterstitialAd.isLoaded()) {
-                    mInterstitialAd.show();
-                    mInterstitialAd.setAdListener(new AdListener(){
-                        @Override
-                        public void onAdClosed() {
-                            checkPermission();
-                        }
-                    });
-
-                }
-                else
                     checkPermission();
             }
         });
