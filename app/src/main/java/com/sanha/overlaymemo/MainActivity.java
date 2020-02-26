@@ -14,6 +14,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.sanha.overlaymemo.IDManager.IDManger;
@@ -160,8 +161,16 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (mInterstitialAd.isLoaded()) {
                     mInterstitialAd.show();
+                    mInterstitialAd.setAdListener(new AdListener(){
+                        @Override
+                        public void onAdClosed() {
+                            checkPermission();
+                        }
+                    });
+
                 }
-                checkPermission();
+                else
+                    checkPermission();
             }
         });
         bt_stop = (Button) findViewById(R.id.bt_stop);
