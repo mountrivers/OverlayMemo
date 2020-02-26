@@ -13,3 +13,7 @@
 .externalNativeBuild
 .cxx
 app/src/main/java/com/sanha/overlaymemo/IDManager/IDManger.java
+app/release/output.json
+app/release/app-release.zip
+app/release/app-release.apk
+app/release/app-release.aab
