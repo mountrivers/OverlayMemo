@@ -1,5 +1,6 @@
 package com.sanha.overlaymemo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.TargetApi;
@@ -11,12 +12,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.TypedValue;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.sanha.overlaymemo.IDManager.IDManger;
 
 import static com.sanha.overlaymemo.MyService.ms;
@@ -27,8 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     private InterstitialAd mInterstitialAd;
 
-    private  Button sizeDown, sizeUp, widthDown, widthUp, resetSize , bt_start, bt_stop, help_button;
-
+    private  Button sizeDown, sizeUp, widthDown, widthUp, resetSize ,bt_start , help_button;
     public SharedPreferences spPref; public SharedPreferences.Editor spEditor;
     private Intent serviceIntent;
 
@@ -182,13 +185,6 @@ public class MainActivity extends AppCompatActivity {
                     checkPermission();
             }
         });
-        bt_stop = (Button) findViewById(R.id.bt_stop);
-        bt_stop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
         help_button = (Button) findViewById(R.id.main_help_button);
         help_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -207,4 +203,18 @@ public class MainActivity extends AppCompatActivity {
         textWidth = spPref.getInt("width",150);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.menu_exit_button){
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
