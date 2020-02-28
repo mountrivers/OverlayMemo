@@ -31,7 +31,7 @@ public class MyService extends Service {
     /* values */
     private float mStartingX, mStartingY;
     float mWidgetStartingX, mWidgetStartingY;
-    int sizer, startIndex, endIndex;
+    int startIndex, endIndex;
     public String temp;
 
     /* window mangers */
@@ -62,6 +62,8 @@ public class MyService extends Service {
 
         /* ms , clipboardmanager, inflate, wm, params, mview , inflate */
         setBasic();
+
+        assginView();
 
         setButton();
 
@@ -100,52 +102,7 @@ public class MyService extends Service {
     public void setBasic() {
         ms = this;
         clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        sizer = 1;
-        inflate = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-        params = new WindowManager.LayoutParams(
-                /*ViewGroup.LayoutParams.MATCH_PARENT*/ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,
-                Build.VERSION.SDK_INT < 26 ?
-                        WindowManager.LayoutParams.TYPE_SYSTEM_ALERT :
-                        WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
-                        | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
-                PixelFormat.TRANSLUCENT);
 
-        mView = inflate.inflate(R.layout.view_in_service, null);
-        mView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent ev) {
-                if (ev.getAction() == MotionEvent.ACTION_OUTSIDE) {
-
-                    if ((params.flags & WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE) == 0)
-                        params.flags += WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-                    wm.updateViewLayout(mView, params);
-                } else {
-                    switch (ev.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            mStartingX = ev.getRawX();
-                            mStartingY = ev.getRawY();
-
-                            mWidgetStartingX = params.x;
-                            mWidgetStartingY = params.y;
-                            return false;
-                        case MotionEvent.ACTION_MOVE:
-                            float deltaX = mStartingX - ev.getRawX();
-                            float deltaY = mStartingY - ev.getRawY();
-                            params.x = (int) (mWidgetStartingX - deltaX);
-                            params.y = (int) (mWidgetStartingY - deltaY);
-                            wm.updateViewLayout(mView, params);
-                            return true;
-                    }
-
-                }
-
-                return false;
-            }
-        });
-
-        wm.addView(mView, params);
     }
 
     public void loadText() {
@@ -273,6 +230,54 @@ public class MyService extends Service {
             db.todoDao().insert(new Memo(""));
         }
         memo = db.todoDao().getA(1);
+    }
+
+    protected  void assginView(){
+        inflate = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+        params = new WindowManager.LayoutParams(
+                /*ViewGroup.LayoutParams.MATCH_PARENT*/ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,
+                Build.VERSION.SDK_INT < 26 ?
+                        WindowManager.LayoutParams.TYPE_SYSTEM_ALERT :
+                        WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
+                        | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+                PixelFormat.TRANSLUCENT);
+
+        mView = inflate.inflate(R.layout.view_in_service, null);
+        mView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent ev) {
+                if (ev.getAction() == MotionEvent.ACTION_OUTSIDE) {
+
+                    if ((params.flags & WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE) == 0)
+                        params.flags += WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+                    wm.updateViewLayout(mView, params);
+                } else {
+                    switch (ev.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            mStartingX = ev.getRawX();
+                            mStartingY = ev.getRawY();
+
+                            mWidgetStartingX = params.x;
+                            mWidgetStartingY = params.y;
+                            return false;
+                        case MotionEvent.ACTION_MOVE:
+                            float deltaX = mStartingX - ev.getRawX();
+                            float deltaY = mStartingY - ev.getRawY();
+                            params.x = (int) (mWidgetStartingX - deltaX);
+                            params.y = (int) (mWidgetStartingY - deltaY);
+                            wm.updateViewLayout(mView, params);
+                            return true;
+                    }
+
+                }
+
+                return false;
+            }
+        });
+
+        wm.addView(mView, params);
     }
 
 }
