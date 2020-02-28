@@ -5,12 +5,12 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
-public class Todo {
+public class Memo {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private  String content;
 
-    public Todo(String content){
+    public Memo(String content){
         this.content= content;
     }
 

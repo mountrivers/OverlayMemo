@@ -18,19 +18,18 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import androidx.room.Room;
 
 import com.sanha.overlaymemo.DB.AppDatabase;
-import com.sanha.overlaymemo.DB.Todo;
+import com.sanha.overlaymemo.DB.Memo;
 
 public class MyService extends Service {
 
     public static MyService ms;
 
     /* values */
-    private float mStartingX , mStartingY;
+    private float mStartingX, mStartingY;
     float mWidgetStartingX, mWidgetStartingY;
     int sizer, startIndex, endIndex;
     public String temp;
@@ -43,11 +42,11 @@ public class MyService extends Service {
 
     /*  db */
     AppDatabase db;
-    Todo todo;
+    Memo memo;
 
     /* design */
     private EditText floatingText;
-    private ImageButton buttonZooming , buttonExit, buttonSave, buttonPaste;
+    private ImageButton buttonZoomingMinus, buttonZoomingPlus, buttonExit, buttonSave, buttonPaste;
 
     /* clipboard */
     public android.content.ClipboardManager clipboardManager;
@@ -98,7 +97,7 @@ public class MyService extends Service {
         floatingText.setTextSize(size);
     }
 
-    public  void setBasic(){
+    public void setBasic() {
         ms = this;
         clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         sizer = 1;
@@ -149,18 +148,11 @@ public class MyService extends Service {
         wm.addView(mView, params);
     }
 
-    public void loadText(){
-        db = Room.databaseBuilder(this,
-                AppDatabase.class, "todo-db")
-                .allowMainThreadQueries()
-                .build();
-        if (db.todoDao().getC() == 0) {
-            db.todoDao().insert(new Todo(""));
-        }
-        todo = db.todoDao().getA(1);
-        floatingText = (EditText) mView.findViewById(R.id.textView);
-        floatingText.setText(todo.toString());
+    public void loadText() {
+        setDB();
 
+        floatingText = (EditText) mView.findViewById(R.id.textView);
+        floatingText.setText(memo.toString());
         floatingText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,12 +162,11 @@ public class MyService extends Service {
             }
         });
 
-
+        /*      텍스트 롱 클릭시 클립보드 ( 복사, 붙여넣기, 지우기 열기 ) */
         floatingText.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 PopupMenu popup = new PopupMenu(getApplicationContext(), v);//v는 클릭된 뷰를 의미
-
                 popup.getMenuInflater().inflate(R.menu.contextual_menu, popup.getMenu());
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -187,8 +178,8 @@ public class MyService extends Service {
                                 startIndex = Math.max(floatingText.getSelectionStart(), 0);
                                 endIndex = Math.max(floatingText.getSelectionEnd(), 0);
                                 floatingText.getText().replace(Math.min(startIndex, endIndex), Math.max(startIndex, endIndex), temp);
-
                                 break;
+
                             case R.id.copy:
                                 temp = floatingText.getText().toString();
                                 startIndex = floatingText.getSelectionStart();
@@ -196,48 +187,53 @@ public class MyService extends Service {
                                 temp = temp.substring(startIndex, endIndex);
                                 ClipData clip = ClipData.newPlainText("clip", temp);
                                 clipboardManager.setPrimaryClip(clip);
-
                                 break;
+
                             case R.id.delete:
                                 startIndex = Math.max(floatingText.getSelectionStart(), 0);
                                 endIndex = Math.max(floatingText.getSelectionEnd(), 0);
                                 floatingText.getText().replace(Math.min(startIndex, endIndex), Math.max(startIndex, endIndex), "");
                                 break;
+
                             default:
                                 break;
                         }
                         return false;
                     }
                 });
-
                 popup.show();//Popup Menu 보이기
-
                 return false;
             }
         });
     }
 
-    public void setButton(){
-        buttonZooming = (ImageButton) mView.findViewById(R.id.button_zooming); // 확대 축소 버튼
+    public void setButton() {
+        buttonZoomingMinus = (ImageButton) mView.findViewById(R.id.button_zooming_minus); // 확대 축소 버튼
+        buttonZoomingPlus = (ImageButton) mView.findViewById(R.id.button_zooming_plus);
         buttonExit = (ImageButton) mView.findViewById(R.id.button_exit); // 종료 버튼
         buttonSave = (ImageButton) mView.findViewById(R.id.button_save); // 저장 버튼
         buttonPaste = (ImageButton) mView.findViewById(R.id.button_paste);
 
-
-        buttonZooming.setOnClickListener(new View.OnClickListener() {
+        buttonZoomingMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (sizer == 1) {
-                    floatingText.setVisibility(v.GONE);
-                    buttonExit.setVisibility(v.GONE);
-                    buttonSave.setVisibility(v.GONE);
-                    sizer = 0;
-                } else {
-                    floatingText.setVisibility(v.VISIBLE);
-                    buttonExit.setVisibility(v.VISIBLE);
-                    buttonSave.setVisibility(v.VISIBLE);
-                    sizer = 1;
-                }
+                floatingText.setVisibility(v.GONE);
+                buttonExit.setVisibility(v.GONE);
+                buttonSave.setVisibility(v.GONE);
+                buttonPaste.setVisibility(View.GONE);
+                buttonZoomingMinus.setVisibility(View.GONE);
+                buttonZoomingPlus.setVisibility(View.VISIBLE);
+            }
+        });
+        buttonZoomingPlus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                floatingText.setVisibility(v.VISIBLE);
+                buttonExit.setVisibility(v.VISIBLE);
+                buttonSave.setVisibility(v.VISIBLE);
+                buttonPaste.setVisibility(View.VISIBLE);
+                buttonZoomingMinus.setVisibility(View.VISIBLE);
+                buttonZoomingPlus.setVisibility(View.GONE);
             }
         });
 
@@ -261,14 +257,23 @@ public class MyService extends Service {
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //  db.todoDao().update(new Todo(floatingText.getText().toString()));
-                todo.setContent(floatingText.getText().toString());
-                db.todoDao().update(todo);
+                //  db.todoDao().update(new Memo(floatingText.getText().toString()));
+                memo.setContent(floatingText.getText().toString());
+                db.todoDao().update(memo);
             }
         });
     }
 
-
+    protected void setDB() {
+        db = Room.databaseBuilder(this,
+                AppDatabase.class, "memo-db")
+                .allowMainThreadQueries()
+                .build();
+        if (db.todoDao().getC() == 0) {
+            db.todoDao().insert(new Memo(""));
+        }
+        memo = db.todoDao().getA(1);
+    }
 
 }
 

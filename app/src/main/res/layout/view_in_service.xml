@@ -31,7 +31,7 @@
             android:background="#77FFFFFF" />
 
         <ImageButton
-            android:id="@+id/button_zooming"
+            android:id="@+id/button_zooming_minus"
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_gravity="center"
@@ -41,6 +41,21 @@
             android:background="#00FFFFFF"
             android:padding="0dp"
             android:src="@drawable/ic_minusbutton"
+            tools:ignore="VectorDrawableCompat" />
+
+        <ImageButton
+            android:id="@+id/button_zooming_plus"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="0"
+            android:background="#00FFFFFF"
+            android:padding="0dp"
+            android:src="@drawable/ic_plusbutton"
+            android:visibility="gone"
             tools:ignore="VectorDrawableCompat" />
 
         <ImageButton
