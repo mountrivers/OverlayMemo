@@ -47,7 +47,7 @@ public class MyService extends Service {
 
     /* design */
     private EditText floatingText;
-    private ImageButton buttonZooming , buttonExit, buttonSave;
+    private ImageButton buttonZooming , buttonExit, buttonSave, buttonPaste;
 
     /* clipboard */
     public android.content.ClipboardManager clipboardManager;
@@ -170,6 +170,7 @@ public class MyService extends Service {
             }
         });
 
+
         floatingText.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -186,7 +187,7 @@ public class MyService extends Service {
                                 startIndex = Math.max(floatingText.getSelectionStart(), 0);
                                 endIndex = Math.max(floatingText.getSelectionEnd(), 0);
                                 floatingText.getText().replace(Math.min(startIndex, endIndex), Math.max(startIndex, endIndex), temp);
-                                Toast.makeText(getApplication(), "메뉴1", Toast.LENGTH_SHORT).show();
+
                                 break;
                             case R.id.copy:
                                 temp = floatingText.getText().toString();
@@ -196,7 +197,6 @@ public class MyService extends Service {
                                 ClipData clip = ClipData.newPlainText("clip", temp);
                                 clipboardManager.setPrimaryClip(clip);
 
-                                Toast.makeText(getApplication(), "메뉴1", Toast.LENGTH_SHORT).show();
                                 break;
                             case R.id.delete:
                                 startIndex = Math.max(floatingText.getSelectionStart(), 0);
@@ -220,7 +220,9 @@ public class MyService extends Service {
     public void setButton(){
         buttonZooming = (ImageButton) mView.findViewById(R.id.button_zooming); // 확대 축소 버튼
         buttonExit = (ImageButton) mView.findViewById(R.id.button_exit); // 종료 버튼
-        buttonSave = (ImageButton) mView.findViewById(R.id.button_save); // 종료 버튼
+        buttonSave = (ImageButton) mView.findViewById(R.id.button_save); // 저장 버튼
+        buttonPaste = (ImageButton) mView.findViewById(R.id.button_paste);
+
 
         buttonZooming.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -246,7 +248,15 @@ public class MyService extends Service {
                 MyService.this.onDestroy();
             }
         });
-
+        buttonPaste.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                temp = clipboardManager.getPrimaryClip().getItemAt(0).getText().toString();
+                startIndex = Math.max(floatingText.getSelectionStart(), 0);
+                endIndex = Math.max(floatingText.getSelectionEnd(), 0);
+                floatingText.getText().replace(Math.min(startIndex, endIndex), Math.max(startIndex, endIndex), temp);
+            }
+        });
 
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override

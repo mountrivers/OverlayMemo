@@ -16,11 +16,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.sanha.overlaymemo.HELP.HelpActivity;
 import com.sanha.overlaymemo.IDManager.IDManger;
 
 import static com.sanha.overlaymemo.MyService.ms;
@@ -31,11 +32,13 @@ public class MainActivity extends AppCompatActivity {
 
     private InterstitialAd mInterstitialAd;
 
-    private  Button sizeDown, sizeUp, widthDown, widthUp, resetSize ,bt_start , help_button;
-    public SharedPreferences spPref; public SharedPreferences.Editor spEditor;
+    private Button sizeDown, sizeUp, widthDown, widthUp, resetSize, bt_start, help_button;
+    public SharedPreferences spPref;
+    public SharedPreferences.Editor spEditor;
     private Intent serviceIntent;
+    public LinearLayout buttonSet;
 
-    public int textSize ,textWidth;
+    public int textSize, textWidth;
     public Resources r;
     AdRequest adrequest;
 
@@ -50,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
         ssButton();
 
-       loadSizes();
+        loadSizes();
 
     }
 
@@ -68,26 +71,26 @@ public class MainActivity extends AppCompatActivity {
             startAct();
         }
     }
-    private void startAct(){
 
-        serviceIntent = new Intent(MainActivity.this,MyService.class);
+    private void startAct() {
+
+        serviceIntent = new Intent(MainActivity.this, MyService.class);
 
         int px = Math.round(TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, textWidth,r.getDisplayMetrics()));
+                TypedValue.COMPLEX_UNIT_DIP, textWidth, r.getDisplayMetrics()));
         serviceIntent.putExtra("textsize", textSize);
         serviceIntent.putExtra("textwidth", px);
 
         if (mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
-            mInterstitialAd.setAdListener(new AdListener(){
+            mInterstitialAd.setAdListener(new AdListener() {
                 @Override
                 public void onAdClosed() {
                     startService(serviceIntent);
                 }
             });
 
-        }
-        else
+        } else
             startService(serviceIntent);
 
     }
@@ -108,10 +111,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-    void setSizes(){
+    void setSizes() {
         sizeDown = (Button) findViewById(R.id.main_fontsize_down);
-        sizeUp =(Button) findViewById(R.id.main_fontsize_up);
+        sizeUp = (Button) findViewById(R.id.main_fontsize_up);
         widthDown = (Button) findViewById(R.id.main_width_down);
         widthUp = (Button) findViewById(R.id.main_width_up);
         resetSize = (Button) findViewById(R.id.main_size_reset);
@@ -119,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         sizeDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(textSize > 0)
+                if (textSize > 0)
                     textSize--;
                 commitSize();
             }
@@ -136,8 +138,8 @@ public class MainActivity extends AppCompatActivity {
         widthDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(textWidth>20)
-                    textWidth-=10;
+                if (textWidth > 140)
+                    textWidth -= 10;
                 commitWidth();
             }
         });
@@ -145,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         widthUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                textWidth+=10;
+                textWidth += 10;
                 commitWidth();
             }
         });
@@ -154,53 +156,55 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 textSize = 14;
-                textWidth= 150;
+                textWidth = 150;
                 commitSize();
                 commitWidth();
             }
         });
     }
 
-    public void commitSize(){
-        if(ms!=null)
+    public void commitSize() {
+        if (ms != null)
             ms.changeSize(textSize);
-        spEditor.putInt("size",textSize);
+        spEditor.putInt("size", textSize);
         spEditor.commit();
     }
 
-    public void commitWidth(){
+    public void commitWidth() {
         int px = Math.round(TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, textWidth,r.getDisplayMetrics()));
-        if(ms!=null)
+                TypedValue.COMPLEX_UNIT_DIP, textWidth, r.getDisplayMetrics()));
+        if (ms != null)
             ms.changeWidth(px);
-        spEditor.putInt("width",textWidth);
+        spEditor.putInt("width", textWidth);
         spEditor.commit();
     }
 
-    public void ssButton(){
+    public void ssButton() {
         bt_start = (Button) findViewById(R.id.bt_start);
+        buttonSet = (LinearLayout) findViewById(R.id.main_buttonSet);
         bt_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    checkPermission();
+                buttonSet.setVisibility(View.VISIBLE);
+                checkPermission();
             }
         });
         help_button = (Button) findViewById(R.id.main_help_button);
         help_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,HelpActivity.class);
+                Intent intent = new Intent(MainActivity.this, HelpActivity.class);
                 startActivity(intent);
             }
         });
     }
 
-    public void loadSizes(){
-        spPref = getSharedPreferences("spPref",MODE_PRIVATE);
+    public void loadSizes() {
+        spPref = getSharedPreferences("spPref", MODE_PRIVATE);
         spEditor = spPref.edit();
         r = getResources();
-        textSize = spPref.getInt("size",14);
-        textWidth = spPref.getInt("width",150);
+        textSize = spPref.getInt("size", 14);
+        textWidth = spPref.getInt("width", 150);
     }
 
     @Override
@@ -212,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.menu_exit_button){
+        if (id == R.id.menu_exit_button) {
             finish();
         }
         return super.onOptionsItemSelected(item);
