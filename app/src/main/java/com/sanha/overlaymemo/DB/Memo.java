@@ -1,6 +1,7 @@
 package com.sanha.overlaymemo.DB;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -8,7 +9,7 @@ import androidx.room.PrimaryKey;
 public class Memo {
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private  String content;
+    private  String content ="";
 
     public Memo(String content){
         this.content= content;
@@ -34,4 +35,5 @@ public class Memo {
     public String toString() {
         return content;
     }
+
 }

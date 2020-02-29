@@ -30,6 +30,18 @@
             android:name=".MyService"
             android:enabled="true"
             android:permission="android.permission.SYSTEM_ALERT_WINDOW" />
+        <service
+            android:name=".Services.S1"
+            android:enabled="true"
+            android:permission="android.permission.SYSTEM_ALERT_WINDOW" />
+        <service
+            android:name=".Services.S2"
+            android:enabled="true"
+            android:permission="android.permission.SYSTEM_ALERT_WINDOW" />
+        <service
+            android:name=".Services.S3"
+            android:enabled="true"
+            android:permission="android.permission.SYSTEM_ALERT_WINDOW" />
     </application>
 
 </manifest>

@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
         android:layout_marginBottom="0dp"
-        android:background="#CAD8F8FF"
+        android:background="#E3E7FF"
         android:orientation="horizontal">
 
         <TextView
@@ -30,7 +30,7 @@
             android:layout_weight="0"
             android:background="#77FFFFFF"
             android:gravity="center"
-            android:text="1" />
+            android:text="3" />
 
         <ImageButton
             android:id="@+id/button_zooming_minus"

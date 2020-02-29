@@ -79,14 +79,6 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/main_size_reset"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@color/colorAccent"
-        android:text="RESET SIZE"
-        android:visibility="gone" />
-
-    <Button
         android:id="@+id/main_help_button"
         android:layout_width="80dp"
         android:layout_height="50dp"
@@ -99,20 +91,21 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <EditText
-        android:id="@+id/editText2"
+    <TextView
+        android:id="@+id/main_seeMemo"
         android:layout_width="328dp"
         android:layout_height="325dp"
         android:layout_marginTop="32dp"
-        android:background="@null"
+        android:background="#FAFAFF"
         android:fontFamily="sans-serif"
+        android:gravity="center"
         android:lineSpacingExtra="8sp"
         android:textColor="@android:color/background_dark"
         android:textColorHighlight="@android:color/background_dark"
         android:textCursorDrawable="@color/design_default_color_on_secondary"
-        android:textSize="16sp"
+        android:textSize="20sp"
         android:textStyle="normal"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_buttonSet"
@@ -125,7 +118,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/ic_openmemo"
+        android:background="@drawable/ic_openmemoactive"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -137,5 +130,42 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_buttonSet" />
+
+    <RadioGroup
+        android:id="@+id/radioset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/main_help_button"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <RadioButton
+            android:id="@+id/main_selecter1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="1" />
+
+        <RadioButton
+            android:id="@+id/main_selecter2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2" />
+
+        <RadioButton
+            android:id="@+id/main_selecter3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="3" />
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MemoSlot / 메모번호"
+        app:layout_constraintBottom_toTopOf="@+id/radioset"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

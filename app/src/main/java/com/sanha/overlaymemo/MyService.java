@@ -35,14 +35,14 @@ public class MyService extends Service {
     public String temp;
 
     /* window mangers */
-    WindowManager wm;
-    View mView;
+    protected WindowManager wm;
+    protected View mView;
     public WindowManager.LayoutParams params;
-    LayoutInflater inflate;
+    protected LayoutInflater inflate;
 
     /*  db */
-    AppDatabase db;
-    Memo memo;
+    protected AppDatabase db;
+    protected Memo memo;
 
     /* design */
     private EditText floatingText;
@@ -99,11 +99,7 @@ public class MyService extends Service {
         floatingText.setTextSize(size);
     }
 
-    public void setBasic() {
-        ms = this;
-        clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 
-    }
 
     public void loadText() {
         setDB();
@@ -197,8 +193,7 @@ public class MyService extends Service {
         buttonExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stopService(new Intent(MyService.this, MyService.class));
-                MyService.this.onDestroy();
+                stopService();
             }
         });
         buttonPaste.setOnClickListener(new View.OnClickListener() {
@@ -221,16 +216,7 @@ public class MyService extends Service {
         });
     }
 
-    protected void setDB() {
-        db = Room.databaseBuilder(this,
-                AppDatabase.class, "memo-db")
-                .allowMainThreadQueries()
-                .build();
-        if (db.todoDao().getC() == 0) {
-            db.todoDao().insert(new Memo(""));
-        }
-        memo = db.todoDao().getA(1);
-    }
+
 
     protected  void assginView(){
         inflate = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -243,8 +229,7 @@ public class MyService extends Service {
                 WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
                         | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
                 PixelFormat.TRANSLUCENT);
-
-        mView = inflate.inflate(R.layout.view_in_service, null);
+        attachView();
         mView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent ev) {
@@ -280,5 +265,29 @@ public class MyService extends Service {
         wm.addView(mView, params);
     }
 
+
+    /* 오버라이드 할 것 */
+    public void setBasic() {
+        ms = this;
+        clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+
+    }
+    protected void setDB() {
+        db = Room.databaseBuilder(this,
+                AppDatabase.class, "memo-db")
+                .allowMainThreadQueries()
+                .build();
+        while(db.todoDao().getC() <= 3) {
+            db.todoDao().insert(new Memo(""));
+        }
+        memo = db.todoDao().getA(1);
+    }
+    protected void attachView(){
+        mView = inflate.inflate(R.layout.view_in_service, null);
+    }
+    public  void stopService(){
+        stopService(new Intent(this,this.getClass()));
+        this.onDestroy();
+    }
 }
 

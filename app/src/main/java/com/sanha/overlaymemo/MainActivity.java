@@ -2,14 +2,16 @@ package com.sanha.overlaymemo;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -17,14 +19,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.sanha.overlaymemo.DB.AppDatabase;
+import com.sanha.overlaymemo.DB.Memo;
 import com.sanha.overlaymemo.HELP.HelpActivity;
 import com.sanha.overlaymemo.IDManager.IDManger;
+import com.sanha.overlaymemo.Services.S1;
+import com.sanha.overlaymemo.Services.S2;
+import com.sanha.overlaymemo.Services.S3;
 
 import static com.sanha.overlaymemo.MyService.ms;
+import static com.sanha.overlaymemo.Services.S1.s1;
+import static com.sanha.overlaymemo.Services.S2.s2;
+import static com.sanha.overlaymemo.Services.S3.s3;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,14 +45,15 @@ public class MainActivity extends AppCompatActivity {
 
     private InterstitialAd mInterstitialAd;
 
-    private Button sizeDown, sizeUp, widthDown, widthUp, resetSize, bt_start, help_button;
-    public SharedPreferences spPref;
-    public SharedPreferences.Editor spEditor;
+    private Button sizeDown, sizeUp, widthDown, widthUp, bt_start, help_button;
+    public RadioGroup radiogroup;
     private Intent serviceIntent;
     public LinearLayout buttonSet;
+    public Manager m1,m2,m3;
+    protected AppDatabase db;
+    protected Memo memo1, memo2, memo3;
+    public TextView showParentMemo;
 
-    public int textSize, textWidth;
-    public Resources r;
     AdRequest adrequest;
 
     @Override
@@ -49,11 +63,14 @@ public class MainActivity extends AppCompatActivity {
 
         mInterstitialAd = IDManger.SetPopUpAd(this);
 
+
         setSizes();
 
         ssButton();
 
-        loadSizes();
+        setDB();
+
+        setSelecter();
 
     }
 
@@ -72,28 +89,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void startAct() {
 
-        serviceIntent = new Intent(MainActivity.this, MyService.class);
-
-        int px = Math.round(TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, textWidth, r.getDisplayMetrics()));
-        serviceIntent.putExtra("textsize", textSize);
-        serviceIntent.putExtra("textwidth", px);
-
-        if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
-            mInterstitialAd.setAdListener(new AdListener() {
-                @Override
-                public void onAdClosed() {
-                    startService(serviceIntent);
-                }
-            });
-
-        } else
-            startService(serviceIntent);
-
-    }
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -111,73 +107,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    void setSizes() {
-        sizeDown = (Button) findViewById(R.id.main_fontsize_down);
-        sizeUp = (Button) findViewById(R.id.main_fontsize_up);
-        widthDown = (Button) findViewById(R.id.main_width_down);
-        widthUp = (Button) findViewById(R.id.main_width_up);
-        resetSize = (Button) findViewById(R.id.main_size_reset);
 
-        sizeDown.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (textSize > 0)
-                    textSize--;
-                commitSize();
-            }
-        });
 
-        sizeUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                textSize++;
-                commitSize();
-            }
-        });
 
-        widthDown.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (textWidth > 140)
-                    textWidth -= 10;
-                commitWidth();
-            }
-        });
-
-        widthUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                textWidth += 10;
-                commitWidth();
-            }
-        });
-
-        resetSize.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                textSize = 14;
-                textWidth = 150;
-                commitSize();
-                commitWidth();
-            }
-        });
-    }
-
-    public void commitSize() {
-        if (ms != null)
-            ms.changeSize(textSize);
-        spEditor.putInt("size", textSize);
-        spEditor.commit();
-    }
-
-    public void commitWidth() {
-        int px = Math.round(TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, textWidth, r.getDisplayMetrics()));
-        if (ms != null)
-            ms.changeWidth(px);
-        spEditor.putInt("width", textWidth);
-        spEditor.commit();
-    }
 
     public void ssButton() {
         bt_start = (Button) findViewById(R.id.bt_start);
@@ -199,13 +131,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void loadSizes() {
-        spPref = getSharedPreferences("spPref", MODE_PRIVATE);
-        spEditor = spPref.edit();
-        r = getResources();
-        textSize = spPref.getInt("size", 14);
-        textWidth = spPref.getInt("width", 150);
-    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -220,5 +146,163 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+
+    /* 여러 메모 컨트롤 */
+
+    public void commitSize() {
+        if (getSelectedService() != null)
+            getSelectedService().changeSize(getSelectedManager().getmSize());
+        getSelectedManager().setMSize();
+    }
+
+    public void commitWidth() {
+        if (getSelectedService() != null)
+            getSelectedService().changeWidth(getSelectedManager().getPixel());
+        getSelectedManager().setMWidth();
+    }
+
+    void setSizes() {
+        sizeDown = (Button) findViewById(R.id.main_fontsize_down);
+        sizeUp = (Button) findViewById(R.id.main_fontsize_up);
+        widthDown = (Button) findViewById(R.id.main_width_down);
+        widthUp = (Button) findViewById(R.id.main_width_up);
+        sizeDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSelectedManager().resizeSize(1);
+                commitSize();
+            }
+        });
+
+        sizeUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSelectedManager().resizeSize(0);
+                commitSize();
+            }
+        });
+
+        widthDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSelectedManager().resizeWidth(1);
+                commitWidth();
+            }
+        });
+
+        widthUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSelectedManager().resizeWidth(0);
+                commitWidth();
+            }
+        });
+
+    }
+
+    private void startAct() {
+
+        switch (getSelectedManager().getId()){
+            case 1:
+                serviceIntent = new Intent(MainActivity.this, S1.class);
+                break;
+            case 2:
+                serviceIntent = new Intent(MainActivity.this, S2.class);
+                break;
+            case 3:
+                serviceIntent = new Intent(MainActivity.this, S3.class);
+                break;
+            default:
+                break;
+        }
+
+
+        serviceIntent.putExtra("textsize", getSelectedManager().getmSize());
+        serviceIntent.putExtra("textwidth", getSelectedManager().getPixel());
+
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+            mInterstitialAd.setAdListener(new AdListener() {
+                @Override
+                public void onAdClosed() {
+                    startService(serviceIntent);
+                }
+            });
+
+        } else
+            startService(serviceIntent);
+    }
+
+    public void setSelecter(){
+        m1 = new Manager(1);
+        m2 = new Manager(2);
+        m3 = new Manager(3);
+
+        m1.loadSizes(this);
+        m2.loadSizes(this);
+        m3.loadSizes(this);
+
+        radiogroup = (RadioGroup)findViewById(R.id.radioset);
+        showParentMemo = (TextView)findViewById(R.id.main_seeMemo);
+        showParentMemo.setText("MEMO #1 \n" + memo1.toString());
+        radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                RadioButton rd = (RadioButton) findViewById(checkedId);
+                switch (rd.getText().toString()){
+                    case "1":
+                        showParentMemo.setText("MEMO #1 \n" +memo1.toString());
+                        break;
+                    case "2":
+                        showParentMemo.setText("MEMO #2 \n" +memo2.toString());
+                        break;
+                    case "3":
+                        showParentMemo.setText("MEMO #3 \n" +memo3.toString());
+                        break;
+                }
+            }
+        });
+
+    }
+
+    public Manager getSelectedManager(){
+        RadioButton rd = (RadioButton) findViewById(radiogroup.getCheckedRadioButtonId());
+        switch (rd.getText().toString()){
+            case "1":
+                return m1;
+            case "2":
+                return m2;
+            case "3":
+                return m3;
+        }
+        return m1;
+    }
+    public MyService getSelectedService(){
+        RadioButton rd = (RadioButton) findViewById(radiogroup.getCheckedRadioButtonId());
+        switch (rd.getText().toString()){
+            case "1":
+                return s1;
+            case "2":
+                return s2;
+            case "3":
+                return s3;
+        }
+        return s1;
+    }
+
+    void setDB() {
+        db = Room.databaseBuilder(this,
+                AppDatabase.class, "memo-db")
+                .allowMainThreadQueries()
+                .build();
+        while(db.todoDao().getC() <= 3) {
+            db.todoDao().insert(new Memo(""));
+        }
+        memo1 = db.todoDao().getA(1);
+        memo2 = db.todoDao().getA(2);
+        memo3 = db.todoDao().getA(3);
     }
 }
