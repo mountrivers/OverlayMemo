@@ -5,15 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.provider.Settings;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,17 +20,16 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.sanha.overlaymemo.DB.AppDatabase;
 import com.sanha.overlaymemo.DB.Memo;
 import com.sanha.overlaymemo.HELP.HelpActivity;
 import com.sanha.overlaymemo.IDManager.IDManger;
+import com.sanha.overlaymemo.Services.MyService;
 import com.sanha.overlaymemo.Services.S1;
 import com.sanha.overlaymemo.Services.S2;
 import com.sanha.overlaymemo.Services.S3;
 
-import static com.sanha.overlaymemo.MyService.ms;
 import static com.sanha.overlaymemo.Services.S1.s1;
 import static com.sanha.overlaymemo.Services.S2.s2;
 import static com.sanha.overlaymemo.Services.S3.s3;
@@ -54,64 +49,60 @@ public class MainActivity extends AppCompatActivity {
     protected Memo memo1, memo2, memo3;
     public TextView showParentMemo;
 
-    AdRequest adrequest;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /* 전면광고 부착 */
         mInterstitialAd = IDManger.SetPopUpAd(this);
-
-
-        setSizes();
-
-        ssButton();
-
+        /* 사이즈 조절 버튼 */
+        controlSizeButton();
+        /* 시작, 도움말 버튼 */
+        setButton();
+        /* DB SET. 미리보기 화면을 위해 사용 */
         setDB();
-
+        /* selecter. 3개의 메모를 따로 관리 해 줄 도구 */
         setSelecter();
 
     }
-
-    public void checkPermission() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {   // 마시멜로우 이상일 경우
-            if (!Settings.canDrawOverlays(this)) {              // 체크
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
-            } else {
-                startAct();
+    /* 사이즈 조절 버튼 */
+    void controlSizeButton() {
+        sizeDown = (Button) findViewById(R.id.main_fontsize_down);
+        sizeUp = (Button) findViewById(R.id.main_fontsize_up);
+        widthDown = (Button) findViewById(R.id.main_width_down);
+        widthUp = (Button) findViewById(R.id.main_width_up);
+        sizeDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSelectedManager().resizeSize(1);
+                commitSize();
             }
-        } else {
-            startAct();
-        }
-    }
-
-
-
-    @TargetApi(Build.VERSION_CODES.M)
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
-            if (!Settings.canDrawOverlays(this)) {
-                // TODO 동의를 얻지 못했을 경우의 처리
-
-            } else {
-                startAct();
+        });
+        sizeUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSelectedManager().resizeSize(0);
+                commitSize();
             }
-        }
+        });
+        widthDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSelectedManager().resizeWidth(1);
+                commitWidth();
+            }
+        });
+        widthUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSelectedManager().resizeWidth(0);
+                commitWidth();
+            }
+        });
     }
-
-
-
-
-
-
-    public void ssButton() {
+    /* 시작, 도움말 버튼 */
+    public void setButton() {
         bt_start = (Button) findViewById(R.id.bt_start);
         buttonSet = (LinearLayout) findViewById(R.id.main_buttonSet);
         bt_start.setOnClickListener(new View.OnClickListener() {
@@ -130,112 +121,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.menu_exit_button) {
-            finish();
+    /* DB SET. 미리보기 화면을 위해 사용 */
+    void setDB() {
+        db = Room.databaseBuilder(this,
+                AppDatabase.class, "memo-db")
+                .allowMainThreadQueries()
+                .build();
+        while(db.todoDao().getC() <= 3) {
+            db.todoDao().insert(new Memo(""));
         }
-        return super.onOptionsItemSelected(item);
+        memo1 = db.todoDao().getA(1);
+        memo2 = db.todoDao().getA(2);
+        memo3 = db.todoDao().getA(3);
     }
-
-
-
-    /* 여러 메모 컨트롤 */
-
-    public void commitSize() {
-        if (getSelectedService() != null)
-            getSelectedService().changeSize(getSelectedManager().getmSize());
-        getSelectedManager().setMSize();
-    }
-
-    public void commitWidth() {
-        if (getSelectedService() != null)
-            getSelectedService().changeWidth(getSelectedManager().getPixel());
-        getSelectedManager().setMWidth();
-    }
-
-    void setSizes() {
-        sizeDown = (Button) findViewById(R.id.main_fontsize_down);
-        sizeUp = (Button) findViewById(R.id.main_fontsize_up);
-        widthDown = (Button) findViewById(R.id.main_width_down);
-        widthUp = (Button) findViewById(R.id.main_width_up);
-        sizeDown.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getSelectedManager().resizeSize(1);
-                commitSize();
-            }
-        });
-
-        sizeUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getSelectedManager().resizeSize(0);
-                commitSize();
-            }
-        });
-
-        widthDown.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getSelectedManager().resizeWidth(1);
-                commitWidth();
-            }
-        });
-
-        widthUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getSelectedManager().resizeWidth(0);
-                commitWidth();
-            }
-        });
-
-    }
-
-    private void startAct() {
-
-        switch (getSelectedManager().getId()){
-            case 1:
-                serviceIntent = new Intent(MainActivity.this, S1.class);
-                break;
-            case 2:
-                serviceIntent = new Intent(MainActivity.this, S2.class);
-                break;
-            case 3:
-                serviceIntent = new Intent(MainActivity.this, S3.class);
-                break;
-            default:
-                break;
-        }
-
-
-        serviceIntent.putExtra("textsize", getSelectedManager().getmSize());
-        serviceIntent.putExtra("textwidth", getSelectedManager().getPixel());
-
-        if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
-            mInterstitialAd.setAdListener(new AdListener() {
-                @Override
-                public void onAdClosed() {
-                    startService(serviceIntent);
-                }
-            });
-
-        } else
-            startService(serviceIntent);
-    }
-
+    /* 3개의 메모 관리 하는 역할 */
     public void setSelecter(){
         m1 = new Manager(1);
         m2 = new Manager(2);
@@ -265,9 +164,100 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
+    /* 시작하는 과정
+    마시멜로 미만 버전 -> 권한 없이 실행 가능   ( checkpermission -> startact )
+    마시멜로 이상 버전 -> 권한 있어야 실행
+      - 권한 없음 -> 권한 받기 (페이지 띄우기) -> onActivityResult 로 권한 받아왔으면 실행 (checkpermission -> onactivityresult -> startact)
+      - 권한 있음 -> 바로 실행  (checkpermission -> startact)
+     */
+    public void checkPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {   // 마시멜로우 이상일 경우
+            if (!Settings.canDrawOverlays(this)) {              // 체크
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
+            } else {
+                startAct();
+            }
+        } else {
+            startAct();
+        }
+    }
+    @TargetApi(Build.VERSION_CODES.M)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
+            if (!Settings.canDrawOverlays(this)) {
+                // TODO 동의를 얻지 못했을 경우의 처리
+            } else {
+                startAct();
+            }
+        }
+    }
+    private void startAct() {
+        switch (getSelectedManager().getId()){
+            case 1:
+                serviceIntent = new Intent(MainActivity.this, S1.class);
+                break;
+            case 2:
+                serviceIntent = new Intent(MainActivity.this, S2.class);
+                break;
+            case 3:
+                serviceIntent = new Intent(MainActivity.this, S3.class);
+                break;
+            default:
+                break;
+        }
+
+        serviceIntent.putExtra("textsize", getSelectedManager().getmSize());
+        serviceIntent.putExtra("textwidth", getSelectedManager().getPixel());
+
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+            mInterstitialAd.setAdListener(new AdListener() {
+                @Override
+                public void onAdClosed() {
+                    startService(serviceIntent);
+                }
+            });
+        }
+        else
+            startService(serviceIntent);
+    }
+
+
+    /* 메뉴 사용 하기 위해 사용. - oncreateoptionmenu ,  onOptionitemSelected <- 여기에 버튼 정의 */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.menu_exit_button) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    /* service 에 사이즈 전달 및 커밋 */
+    public void commitSize() {
+        if (getSelectedService() != null)
+            getSelectedService().changeSize(getSelectedManager().getmSize());
+        getSelectedManager().setMSize();
+    }
+    public void commitWidth() {
+        if (getSelectedService() != null)
+            getSelectedService().changeWidth(getSelectedManager().getPixel());
+        getSelectedManager().setMWidth();
+    }
+
+    /* 라디오 그룹 버튼으로 어느 버튼이 선택되어있는지 확인 -> service, manager 적당히 리턴 */
     public Manager getSelectedManager(){
         RadioButton rd = (RadioButton) findViewById(radiogroup.getCheckedRadioButtonId());
         switch (rd.getText().toString()){
@@ -292,17 +282,5 @@ public class MainActivity extends AppCompatActivity {
         }
         return s1;
     }
-
-    void setDB() {
-        db = Room.databaseBuilder(this,
-                AppDatabase.class, "memo-db")
-                .allowMainThreadQueries()
-                .build();
-        while(db.todoDao().getC() <= 3) {
-            db.todoDao().insert(new Memo(""));
-        }
-        memo1 = db.todoDao().getA(1);
-        memo2 = db.todoDao().getA(2);
-        memo3 = db.todoDao().getA(3);
-    }
+    
 }

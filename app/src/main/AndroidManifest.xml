@@ -27,7 +27,7 @@
         </activity>
 
         <service
-            android:name=".MyService"
+            android:name=".Services.MyService"
             android:enabled="true"
             android:permission="android.permission.SYSTEM_ALERT_WINDOW" />
         <service

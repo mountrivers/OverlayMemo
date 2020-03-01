@@ -1,4 +1,4 @@
-package com.sanha.overlaymemo;
+package com.sanha.overlaymemo.Services;
 
 import android.app.Service;
 import android.content.ClipData;
@@ -23,6 +23,7 @@ import androidx.room.Room;
 
 import com.sanha.overlaymemo.DB.AppDatabase;
 import com.sanha.overlaymemo.DB.Memo;
+import com.sanha.overlaymemo.R;
 
 public class MyService extends Service {
 

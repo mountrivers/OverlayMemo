@@ -6,7 +6,6 @@ import androidx.room.Room;
 
 import com.sanha.overlaymemo.DB.AppDatabase;
 import com.sanha.overlaymemo.DB.Memo;
-import com.sanha.overlaymemo.MyService;
 import com.sanha.overlaymemo.R;
 
 public class S1 extends MyService {
