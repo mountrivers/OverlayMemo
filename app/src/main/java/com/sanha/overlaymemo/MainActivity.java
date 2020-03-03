@@ -282,5 +282,5 @@ public class MainActivity extends AppCompatActivity {
         }
         return s1;
     }
-    
+
 }
