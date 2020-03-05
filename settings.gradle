@@ -1,2 +1,4 @@
 include ':app'
 rootProject.name='OverlayMemo'
+include ':app', ':ColorPickerPreference'
+project(':ColorPickerPreference').projectDir = new File('app/libs/ColorPickerPreference')
