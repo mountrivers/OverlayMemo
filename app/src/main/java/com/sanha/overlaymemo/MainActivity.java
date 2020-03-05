@@ -294,20 +294,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void colorChange(){
-        int getColor = getSelectedService().getColor();
-        AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, getColor,true, new AmbilWarnaDialog.OnAmbilWarnaListener() {
-            @Override
-            public void onOk(AmbilWarnaDialog dialog, int color) {
-                // color is the color selected by the user.
-                getSelectedService().colorChange(color);
-            }
+        if(getSelectedService() != null) {
+            int getColor = getSelectedService().getColor();
+            AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, getColor, true, new AmbilWarnaDialog.OnAmbilWarnaListener() {
+                @Override
+                public void onOk(AmbilWarnaDialog dialog, int color) {
+                    // color is the color selected by the user.
+                    getSelectedService().colorChange(color);
+                }
 
-            @Override
-            public void onCancel(AmbilWarnaDialog dialog) {
-                // cancel was selected by the user
-            }
+                @Override
+                public void onCancel(AmbilWarnaDialog dialog) {
+                    // cancel was selected by the user
+                }
 
-        });
-        dialog.show();
+            });
+            dialog.show();
+        }
     }
 }
