@@ -35,8 +35,8 @@ public class S3 extends MyService {
 
     @Override
     protected  void setXY(){
-        params.x = -100;
-        params.y = 30;
+        params.x = 100;
+        params.y = 90;
         wm.updateViewLayout(mView,params);
     }
 }

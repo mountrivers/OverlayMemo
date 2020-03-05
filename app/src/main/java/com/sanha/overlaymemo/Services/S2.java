@@ -35,7 +35,7 @@ public class S2 extends MyService {
 
     @Override
     protected  void setXY(){
-        params.x = -100;
+        params.x = 0;
         params.y = 30;
         wm.updateViewLayout(mView,params);
     }
