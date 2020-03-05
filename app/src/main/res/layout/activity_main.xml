@@ -13,7 +13,7 @@
         android:layout_height="43dp"
         android:background="#FFFFFFFF"
         android:orientation="horizontal"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -151,9 +151,11 @@
         android:id="@+id/radioset"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        app:layout_constraintBottom_toTopOf="@+id/main_help_button"
-        app:layout_constraintStart_toStartOf="parent">
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/bt_start">
 
         <RadioButton
             android:id="@+id/main_selecter1"
@@ -180,8 +182,11 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="92dp"
+        android:layout_marginRight="92dp"
+        android:layout_marginBottom="8dp"
         android:text="MemoSlot / 메모번호"
         app:layout_constraintBottom_toTopOf="@+id/radioset"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
