@@ -234,7 +234,7 @@ public class MyService extends Service {
                         | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
                 PixelFormat.TRANSLUCENT);
         attachView();
-        setXY();
+
         mView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent ev) {
@@ -269,6 +269,7 @@ public class MyService extends Service {
 
         wm.addView(mView, params);
         backGround = (LinearLayout) mView.findViewById(R.id.service_background);
+        setXY();
     }
     public void colorChange(int color){
         backGround.setBackgroundColor(color);
