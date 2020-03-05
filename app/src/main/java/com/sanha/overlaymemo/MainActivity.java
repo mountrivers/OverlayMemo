@@ -30,6 +30,8 @@ import com.sanha.overlaymemo.Services.S1;
 import com.sanha.overlaymemo.Services.S2;
 import com.sanha.overlaymemo.Services.S3;
 
+import yuku.ambilwarna.AmbilWarnaDialog;
+
 import static com.sanha.overlaymemo.Services.S1.s1;
 import static com.sanha.overlaymemo.Services.S2.s2;
 import static com.sanha.overlaymemo.Services.S3.s3;
@@ -40,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     private InterstitialAd mInterstitialAd;
 
-    private Button sizeDown, sizeUp, widthDown, widthUp, bt_start, help_button;
+    private Button sizeDown, sizeUp, widthDown, widthUp, bt_start, help_button, bt_colorChange;
     public RadioGroup radiogroup;
     private Intent serviceIntent;
     public LinearLayout buttonSet;
@@ -118,6 +120,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, HelpActivity.class);
                 startActivity(intent);
+            }
+        });
+        bt_colorChange = (Button) findViewById(R.id.main_colorpicker);
+
+        bt_colorChange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                colorChange();
             }
         });
     }
@@ -283,4 +293,19 @@ public class MainActivity extends AppCompatActivity {
         return s1;
     }
 
+    private void colorChange(){
+        AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, 0xFFFFFFFF,true, new AmbilWarnaDialog.OnAmbilWarnaListener() {
+            @Override
+            public void onOk(AmbilWarnaDialog dialog, int color) {
+                // color is the color selected by the user.
+            }
+
+            @Override
+            public void onCancel(AmbilWarnaDialog dialog) {
+                // cancel was selected by the user
+            }
+
+        });
+        dialog.show();
+    }
 }
