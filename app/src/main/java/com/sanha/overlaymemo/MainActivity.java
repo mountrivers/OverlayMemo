@@ -150,9 +150,9 @@ public class MainActivity extends AppCompatActivity {
         m2 = new Manager(2);
         m3 = new Manager(3);
 
-        m1.loadSizes(this);
-        m2.loadSizes(this);
-        m3.loadSizes(this);
+        m1.loadSizes(this); m1.loadColor(this);
+        m2.loadSizes(this); m2.loadColor(this);
+        m3.loadSizes(this); m3.loadColor(this);
 
         radiogroup = (RadioGroup)findViewById(R.id.radioset);
         showParentMemo = (TextView)findViewById(R.id.main_seeMemo);
@@ -224,6 +224,7 @@ public class MainActivity extends AppCompatActivity {
 
         serviceIntent.putExtra("textsize", getSelectedManager().getmSize());
         serviceIntent.putExtra("textwidth", getSelectedManager().getPixel());
+        serviceIntent.putExtra("color",getSelectedManager().getBackGroundColor());
 
         if (mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
@@ -294,13 +295,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void colorChange(){
-        if(getSelectedService() != null) {
-            int getColor = getSelectedService().getColor();
+            int getColor = getSelectedManager().getBackGroundColor();
             AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, getColor, true, new AmbilWarnaDialog.OnAmbilWarnaListener() {
                 @Override
                 public void onOk(AmbilWarnaDialog dialog, int color) {
                     // color is the color selected by the user.
-                    getSelectedService().colorChange(color);
+                    getSelectedManager().setBackGroundColor(color);
+                    if(getSelectedService()!=null)
+                        getSelectedService().colorChange(color);
                 }
 
                 @Override
@@ -310,6 +312,5 @@ public class MainActivity extends AppCompatActivity {
 
             });
             dialog.show();
-        }
     }
 }

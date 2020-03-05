@@ -9,9 +9,8 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class Manager {
     public int mSize =14;
-
-
     public int mWidth = 140;
+    public int color = 0xFFFFFFF;
 
     public int getId() {
         return id;
@@ -45,18 +44,6 @@ public class Manager {
         return mSize;
     }
 
-    public void setmSize(int mSize) {
-        this.mSize = mSize;
-    }
-
-    public int getmWidth() {
-        return mWidth;
-    }
-
-    public void setmWidth(int mWidth) {
-        this.mWidth = mWidth;
-    }
-
     public int getPixel(){
         return Math.round(TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, mWidth, r.getDisplayMetrics()));
@@ -72,5 +59,17 @@ public class Manager {
             mWidth+=10;
         else if( a == 1 && mWidth > 140)
             mWidth-= 10;
+    }
+    public void loadColor(Context context) {
+        r = context.getResources();
+        color = spPref.getInt("color"+id, 0xFFFFFFFF);
+    }
+    public int getBackGroundColor(){
+        return color;
+    }
+    public void setBackGroundColor(int getColor){
+        color = getColor;
+        spEditor.putInt("color"+id,color);
+        spEditor.commit();
     }
 }

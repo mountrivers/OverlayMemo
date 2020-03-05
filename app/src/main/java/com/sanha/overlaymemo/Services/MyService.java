@@ -90,6 +90,7 @@ public class MyService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         changeSize(intent.getExtras().getInt("textsize", 14));
         changeWidth(intent.getIntExtra("textwidth", 150));
+        colorChange(intent.getIntExtra("color",0xFFFFFFFF));
         return super.onStartCommand(intent, flags, startId);
     }
 
