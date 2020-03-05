@@ -40,6 +40,7 @@ public class MyService extends Service {
     protected View mView;
     public WindowManager.LayoutParams params;
     protected LayoutInflater inflate;
+    public LinearLayout backGround;
 
     /*  db */
     protected AppDatabase db;
@@ -264,6 +265,10 @@ public class MyService extends Service {
         });
 
         wm.addView(mView, params);
+        backGround = (LinearLayout) mView.findViewById(R.id.service_background);
+    }
+    public void colorChange(int color){
+        backGround.setBackgroundColor(color);
     }
 
 

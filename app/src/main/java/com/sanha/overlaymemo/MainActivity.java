@@ -298,6 +298,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onOk(AmbilWarnaDialog dialog, int color) {
                 // color is the color selected by the user.
+                getSelectedService().colorChange(color);
             }
 
             @Override
