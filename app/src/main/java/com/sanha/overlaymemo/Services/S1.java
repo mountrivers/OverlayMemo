@@ -32,4 +32,10 @@ public class S1 extends MyService {
     protected void attachView(){
         mView = inflate.inflate(R.layout.view_in_service, null);
     }
+
+    @Override
+    protected  void setXY(){
+        mView.setX(0);
+        mView.setY(30);
+    }
 }

@@ -234,6 +234,7 @@ public class MyService extends Service {
                         | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
                 PixelFormat.TRANSLUCENT);
         attachView();
+        setXY();
         mView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent ev) {
@@ -278,7 +279,10 @@ public class MyService extends Service {
         return color.getColor();
     }
 
-
+    protected   void stopService(){
+        stopService(new Intent(this,this.getClass()));
+        this.onDestroy();
+    }
     /* 오버라이드 할 것 */
     public void setBasic() {
         ms = this;
@@ -298,9 +302,9 @@ public class MyService extends Service {
     protected void attachView(){
         mView = inflate.inflate(R.layout.view_in_service, null);
     }
-    public  void stopService(){
-        stopService(new Intent(this,this.getClass()));
-        this.onDestroy();
+
+    protected void setXY(){
+
     }
 }
 
