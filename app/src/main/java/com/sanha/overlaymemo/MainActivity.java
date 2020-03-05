@@ -294,7 +294,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void colorChange(){
-        AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, 0xFFFFFFFF,true, new AmbilWarnaDialog.OnAmbilWarnaListener() {
+        int getColor = getSelectedService().getColor();
+        AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, getColor,true, new AmbilWarnaDialog.OnAmbilWarnaListener() {
             @Override
             public void onOk(AmbilWarnaDialog dialog, int color) {
                 // color is the color selected by the user.

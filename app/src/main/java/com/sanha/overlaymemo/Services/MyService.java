@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.IBinder;
 import android.view.LayoutInflater;
@@ -269,6 +270,11 @@ public class MyService extends Service {
     }
     public void colorChange(int color){
         backGround.setBackgroundColor(color);
+    }
+    public int getColor(){
+        ColorDrawable color = (ColorDrawable) backGround.getBackground();
+
+        return color.getColor();
     }
 
 
