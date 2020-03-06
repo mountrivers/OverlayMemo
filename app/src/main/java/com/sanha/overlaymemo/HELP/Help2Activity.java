@@ -11,7 +11,7 @@ import com.sanha.overlaymemo.MainActivity;
 import com.sanha.overlaymemo.R;
 
 public class Help2Activity extends AppCompatActivity {
-    Button endHelpButton ;
+    Button endHelpButton , seeMoreButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,10 +23,19 @@ public class Help2Activity extends AppCompatActivity {
 
     protected void setButton(){
         endHelpButton = (Button) findViewById(R.id.endhelp_button);
+        seeMoreButton = (Button) findViewById(R.id.help2_seemore_button);
 
         endHelpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
+            }
+        });
+        seeMoreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Help2Activity.this,SeeMoreActivity.class);
+                startActivity(intent);
                 finish();
             }
         });
