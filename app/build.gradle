@@ -7,8 +7,8 @@ android {
         applicationId "com.sanha.overlaymemo"
         minSdkVersion 15
         targetSdkVersion 29
-        versionCode 7
-        versionName "3.100"
+        versionCode 8
+        versionName "3.200"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
