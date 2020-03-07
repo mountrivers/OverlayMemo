@@ -109,3 +109,139 @@ public void checkPermission() {
 ```
 체크된 메모 실행
 
+### 메모 컨트롤 
+- 글자크기/ 창크기 => getSelectedManager 을 통해 Manager 에서 실행 
+
+- 색상변경 => opensource 사용 Github https://github.com/yukuku/ambilwarna
+
+## Manager class
+```
+public class Manager {
+
+    public int getId() {
+        return id;
+    }
+
+    public int id;
+    public SharedPreferences spPref;
+    public SharedPreferences.Editor spEditor;
+    public Resources r;
+    public Manager(int a){
+        id = a;
+    }
+
+    public void loadSizes(Context context) {
+        spPref = context.getSharedPreferences("spPref", MODE_PRIVATE);
+        spEditor = spPref.edit();
+        r = context.getResources();
+        mSize = spPref.getInt("size"+id, 14);
+        mWidth = spPref.getInt("width"+id, 150);
+    }
+    public void setMSize(){
+        spEditor.putInt("size"+id,mSize);
+        spEditor.commit();
+    }
+    public void setMWidth(){
+        spEditor.putInt("width"+id,mWidth);
+        spEditor.commit();
+    }
+
+    public int getmSize() {
+        return mSize;
+    }
+
+    public int getPixel(){
+        return Math.round(TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, mWidth, r.getDisplayMetrics()));
+    }
+    public void resizeSize(int a){
+        if(a==0)
+            mSize++;
+        else if( a== 1 && mSize > 1)
+            mSize--;
+    }
+    public void resizeWidth(int a){
+        if( a == 0)
+            mWidth+=10;
+        else if( a == 1 && mWidth > 140)
+            mWidth-= 10;
+    }
+    public void loadColor(Context context) {
+        r = context.getResources();
+        color = spPref.getInt("color"+id, 0xFFFFFFFF);
+    }
+    public int getBackGroundColor(){
+        return color;
+    }
+    public void setBackGroundColor(int getColor){
+        color = getColor;
+        spEditor.putInt("color"+id,color);
+        spEditor.commit();
+    }
+}
+```
+ -pixel <=> DIP 변환 ( edittext 는 DIP 기준으로 하여야 줄바꿈이 올바로 됨)
+ 
+ 
+ ## DB ( room 사용 )
+ ### MemoDao
+```
+@Dao
+public interface MemoDao {
+    @Query("SELECT * FROM Memo")
+    List<Memo> getAll();
+
+    @Query("SELECT * FROM Memo WHERE id = :ids")
+    Memo getA(int ids) ;
+
+    @Query("SELECT COUNT(*) FROM Memo")
+    int getC();
+
+
+    @Insert
+    void insert(Memo memo);
+
+    @Update
+    void update(Memo memo);
+
+    @Delete
+    void delete(Memo memo);
+}
+```
+### Memo
+```
+@Entity
+public class Memo {
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+    private  String content ="";
+
+    public Memo(String content){
+        this.content= content;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    @Override
+    public String toString() {
+        return content;
+    }
+
+}
+```
+
+## MyService
