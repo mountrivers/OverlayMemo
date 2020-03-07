@@ -15,15 +15,19 @@ https://play.google.com/store/apps/details?id=com.sanha.overlaymemo
 ## DETAILS
 
 ### 메모시작
+
 ![메모시작](https://user-images.githubusercontent.com/36880919/76143496-46ba8080-60bb-11ea-9061-807301b6821b.jpg)
+
 최대 3개의 메모를 띄울 수 있음
 
 ### 메모창 컨트롤
 ![메모창컨트롤](https://user-images.githubusercontent.com/36880919/76143495-45895380-60bb-11ea-9e58-ffbd9b023eeb.jpg)
+
 메모창의 글자 크기, 창의 가로 크기를 조절 가능하며, 배경색 또한 변경 가능 한 컨트롤 창
 
 ### 메모 내부 컨트롤
 ![메모컨트롤](https://user-images.githubusercontent.com/36880919/76143498-46ba8080-60bb-11ea-860d-6dc9001eea41.jpg)
+
 드래그로 메모창 위치 이동 / 축소-되돌리기 / 붙여넣기 / 저장 / 종료 버튼 제공
 
 (축소모드)
