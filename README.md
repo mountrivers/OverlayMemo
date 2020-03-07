@@ -2,16 +2,28 @@
 ## 플레이 스토어 링크 
 https://play.google.com/store/apps/details?id=com.sanha.overlaymemo
 
-## 개발자 
+## 개발 목적 
+ 스마트폰으로 무언가를 하다보면, 두개의 어플을 번갈아 가면서 봐야 할 때가 있습니다. 예를들어, 게임을 하다가 공략을 보기 위해 다른 어플로 들어갔다, 다시 돌아오고, 이런것을 반복 한다던지 이럴때 항상 위에 떠있는 메모가 있으면 어떨까 하는 생각이 첫번째였고, 항상 자주보는 스마트폰에서 맨 위에 메모를 띄워 놓는다면 깜빡 하는 일도 줄일 수 있다고 생각하여 만들게 되었습니다. 
+ 
+## 개발 인원 
+### 개발자 
 이산하 (tksgk77@gmail.com)
 <br/>
-## UX UI 디자인
+### UX UI 디자인
 황정주 (jjayhwang@gmail.com)
 <br/>
+
+## 개발 기간 
+ 2020.02 ~ 지속 업데이트중
+ 
+
 ## 실행 화면
 ![Screenshot_20200307-212637](https://user-images.githubusercontent.com/36880919/76143400-7b7a0800-60ba-11ea-9395-4083771be854.png)|![Screenshot_20200307-212658](https://user-images.githubusercontent.com/36880919/76143401-7ddc6200-60ba-11ea-9f1f-297152b1d892.png)
 --- | --- |
 <br/><br/>
+
+
+
 ## DETAILS
 <br/><br/>
 ### 메모시작
