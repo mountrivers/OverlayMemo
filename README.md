@@ -1,4 +1,6 @@
 # OverlayMemo
+## 플레이 스토어 링크 
+https://play.google.com/store/apps/details?id=com.sanha.overlaymemo
 
 ## 개발자 
 이산하 (tksgk77@gmail.com)
