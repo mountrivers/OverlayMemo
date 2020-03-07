@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
-        android:text="개발자 )\n 이름 : 이산하 \n Mail : tksgk77@gmail.com\n\nUX/UI 디자인 )\n 이름 : 황정주 \n Mail: jjayhwang@gmail.com"
+        android:text="개발자 )\n 이름 : 이산하 \n Mail : tksgk77@gmail.com\n\n UX/UI 디자인 )\n 이름 : 황정주 \n Mail: jjayhwang@gmail.com"
         android:textColor="#04004F"
         android:textSize="24sp" />
 

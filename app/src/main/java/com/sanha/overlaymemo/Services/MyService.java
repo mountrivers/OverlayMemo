@@ -103,8 +103,6 @@ public class MyService extends Service {
         floatingText.setTextSize(size);
     }
 
-
-
     public void loadText() {
         setDB();
 
@@ -219,8 +217,6 @@ public class MyService extends Service {
             }
         });
     }
-
-
 
     protected  void assginView(){
         inflate = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
