@@ -50,12 +50,12 @@ public class MainActivity extends AppCompatActivity {
     protected AppDatabase db;
     protected Memo memo1, memo2, memo3;
     public TextView showParentMemo;
-
+    public static MainActivity mainActivity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        mainActivity = this;
         /* 전면광고 부착 */
         mInterstitialAd = IDManger.SetPopUpAd(this);
         /* 사이즈 조절 버튼 */
@@ -237,6 +237,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else
             startService(serviceIntent);
+
     }
 
 
@@ -302,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
                     // color is the color selected by the user.
                     getSelectedManager().setBackGroundColor(color);
                     if(getSelectedService()!=null)
-                        getSelectedService().colorChange(color);
+                        getSelectedService().changeColor(color);
                 }
 
                 @Override
