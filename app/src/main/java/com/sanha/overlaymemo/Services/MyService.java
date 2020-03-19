@@ -1,5 +1,9 @@
 package com.sanha.overlaymemo.Services;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -23,6 +27,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 
+import androidx.core.app.NotificationCompat;
 import androidx.room.Room;
 
 import com.sanha.overlaymemo.DB.AppDatabase;
@@ -90,6 +95,8 @@ public class MyService extends Service {
         loadText();
 
         alterSize();
+
+        initializeNotification();
     }
 
 
@@ -114,7 +121,7 @@ public class MyService extends Service {
         changeSize(mg.getmSize());
         changeWidth(mg.getPixel());
         changeColor(mg.getBackGroundColor());        */
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
 
 
@@ -310,6 +317,30 @@ public class MyService extends Service {
         r = getResources();
         return Math.round(TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, textWidth, r.getDisplayMetrics()));
+    }
+
+    public void initializeNotification() {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "1");
+        builder.setSmallIcon(R.mipmap.ic_launcher);
+        NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle();
+        style.bigText("설정을 보려면 누르세요.");
+        style.setBigContentTitle(null);
+        style.setSummaryText("서비스 동작중");
+        builder.setContentText(null);
+        builder.setContentTitle(null);
+        builder.setOngoing(true);
+        builder.setStyle(style);
+        builder.setWhen(0);
+        builder.setShowWhen(false);
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        builder.setContentIntent(pendingIntent);
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            manager.createNotificationChannel(new NotificationChannel("1", "undead_service", NotificationManager.IMPORTANCE_NONE));
+        }
+        Notification notification = builder.build();
+        startForeground(1, notification);
     }
 
 
