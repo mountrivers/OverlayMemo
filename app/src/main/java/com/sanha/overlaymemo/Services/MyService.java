@@ -11,6 +11,7 @@ import android.graphics.PixelFormat;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.IBinder;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -62,7 +63,7 @@ public class MyService extends Service {
     private ImageButton buttonZoomingMinus, buttonZoomingPlus, buttonExit, buttonSave, buttonPaste;
     protected int textSize;
     protected int textWidth;
-    protected int textColor;
+    protected int backColor;
 
     /* clipboard */
     public android.content.ClipboardManager clipboardManager;
@@ -87,6 +88,8 @@ public class MyService extends Service {
         setButton();
 
         loadText();
+
+        alterSize();
     }
 
 
@@ -110,7 +113,7 @@ public class MyService extends Service {
         mg.loadSizes(mainActivity);
         changeSize(mg.getmSize());
         changeWidth(mg.getPixel());
-        colorChange(mg.getBackGroundColor());        */
+        changeColor(mg.getBackGroundColor());        */
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -122,7 +125,8 @@ public class MyService extends Service {
     public void changeSize(int size) {
         floatingText.setTextSize(size);
     }
-    public void colorChange(int color){
+
+    public void changeColor(int color){
         backGround.setBackgroundColor(color);
     }
     public int getColor(){
@@ -130,6 +134,7 @@ public class MyService extends Service {
 
         return color.getColor();
     }
+
     public void loadText() {
         setDB();
 
@@ -300,6 +305,14 @@ public class MyService extends Service {
         stopService(new Intent(this,this.getClass()));
         this.onDestroy();
     }
+
+    protected  int getPixel(){
+        r = getResources();
+        return Math.round(TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, textWidth, r.getDisplayMetrics()));
+    }
+
+
     /* 오버라이드 할 것 */
     public void setBasic() {
         ms = this;
@@ -321,6 +334,10 @@ public class MyService extends Service {
     }
 
     protected void setXY(){
+
+    }
+
+    protected  void alterSize(){
 
     }
 }
