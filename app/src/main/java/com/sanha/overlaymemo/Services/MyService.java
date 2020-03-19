@@ -5,6 +5,8 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -24,7 +26,11 @@ import androidx.room.Room;
 
 import com.sanha.overlaymemo.DB.AppDatabase;
 import com.sanha.overlaymemo.DB.Memo;
+import com.sanha.overlaymemo.MainActivity;
+import com.sanha.overlaymemo.Manager;
 import com.sanha.overlaymemo.R;
+
+import static com.sanha.overlaymemo.MainActivity.mainActivity;
 
 public class MyService extends Service {
 
@@ -46,13 +52,23 @@ public class MyService extends Service {
     /*  db */
     protected AppDatabase db;
     protected Memo memo;
+    public SharedPreferences spPref;
+    public SharedPreferences.Editor spEditor;
+    public Resources r;
+
 
     /* design */
     private EditText floatingText;
     private ImageButton buttonZoomingMinus, buttonZoomingPlus, buttonExit, buttonSave, buttonPaste;
+    protected int textSize;
+    protected int textWidth;
+    protected int textColor;
 
     /* clipboard */
     public android.content.ClipboardManager clipboardManager;
+
+
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -88,9 +104,13 @@ public class MyService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        changeSize(intent.getExtras().getInt("textsize", 14));
-        changeWidth(intent.getIntExtra("textwidth", 150));
-        colorChange(intent.getIntExtra("color",0xFFFFFFFF));
+        /*
+        Manager mg= new Manager(1);
+        mg.loadColor(mainActivity);
+        mg.loadSizes(mainActivity);
+        changeSize(mg.getmSize());
+        changeWidth(mg.getPixel());
+        colorChange(mg.getBackGroundColor());        */
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -102,7 +122,14 @@ public class MyService extends Service {
     public void changeSize(int size) {
         floatingText.setTextSize(size);
     }
+    public void colorChange(int color){
+        backGround.setBackgroundColor(color);
+    }
+    public int getColor(){
+        ColorDrawable color = (ColorDrawable) backGround.getBackground();
 
+        return color.getColor();
+    }
     public void loadText() {
         setDB();
 
@@ -267,14 +294,7 @@ public class MyService extends Service {
         backGround = (LinearLayout) mView.findViewById(R.id.service_background);
         setXY();
     }
-    public void colorChange(int color){
-        backGround.setBackgroundColor(color);
-    }
-    public int getColor(){
-        ColorDrawable color = (ColorDrawable) backGround.getBackground();
 
-        return color.getColor();
-    }
 
     protected   void stopService(){
         stopService(new Intent(this,this.getClass()));
