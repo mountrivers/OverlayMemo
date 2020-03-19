@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <application
         android:allowBackup="true"
         android:icon="@drawable/memoicon"
@@ -14,7 +14,8 @@
         android:theme="@style/AppTheme">
         <activity android:name=".HELP.SeeMoreActivity"></activity>
         <activity android:name=".HELP.Help2Activity" />
-        <activity android:name=".HELP.HelpActivity" /> <!-- Sample AdMob App ID: ca-app-pub-3940256099942544~3347511713 -->
+        <activity android:name=".HELP.HelpActivity" />
+        <!-- Sample AdMob App ID: ca-app-pub-3940256099942544~3347511713 -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-2294544540507821~9324759208" />
