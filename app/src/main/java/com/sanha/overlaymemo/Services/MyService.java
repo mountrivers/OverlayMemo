@@ -323,9 +323,9 @@ public class MyService extends Service {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "1");
         builder.setSmallIcon(R.mipmap.ic_launcher);
         NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle();
-        style.bigText("설정을 보려면 누르세요.");
+        style.bigText("앱을 열려면 눌러주세요. 메모는 자주 저장 해 주세요");
         style.setBigContentTitle(null);
-        style.setSummaryText("서비스 동작중");
+        style.setSummaryText("메모가 실행중입니다.");
         builder.setContentText(null);
         builder.setContentTitle(null);
         builder.setOngoing(true);
