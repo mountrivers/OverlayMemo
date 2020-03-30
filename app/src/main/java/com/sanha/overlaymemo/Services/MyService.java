@@ -115,12 +115,8 @@ public class MyService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         /*
-        Manager mg= new Manager(1);
-        mg.loadColor(mainActivity);
-        mg.loadSizes(mainActivity);
-        changeSize(mg.getmSize());
-        changeWidth(mg.getPixel());
-        changeColor(mg.getBackGroundColor());        */
+        * START_STICKY : os에 의해 종료 될 시, 서비스를 다시 열어줌
+        * */
         return START_STICKY;
     }
 
@@ -320,6 +316,11 @@ public class MyService extends Service {
     }
 
     public void initializeNotification() {
+        /*
+        foreground 서비스로 지정하여, background 로 인식하여 꺼지는 것을 방지 하기 위해
+        foreground 로 계속 띄워 놓기 위해서는, 노티바에 노티를 지속적으로 띄워 놔 줘야 한다.
+        (사용자에게 인식을 시켜주기 위하여)
+         */
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "1");
         builder.setSmallIcon(R.mipmap.ic_launcher);
         NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle();
