@@ -464,3 +464,4 @@ public class S1 extends MyService {
 ### setXY
  - 초기 시작 위치 설정 (3개 한번에 켰을때 겹쳐보이지 않도록 ) 
  
+foreground 작업 
