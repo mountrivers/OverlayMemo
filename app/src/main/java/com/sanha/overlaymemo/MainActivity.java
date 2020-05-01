@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     public RadioGroup radiogroup;
     private Intent serviceIntent;
     public LinearLayout buttonSet;
+    public FrameLayout bannerAd;
     public Manager m1,m2,m3;
     protected AppDatabase db;
     protected Memo memo1, memo2, memo3;
@@ -58,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
         mainActivity = this;
         /* 전면광고 부착 */
         mInterstitialAd = IDManger.SetPopUpAd(this);
+        bannerAd = findViewById(R.id.adView);
+        IDManger.SetBannerAd(this,bannerAd);
         /* 사이즈 조절 버튼 */
         controlSizeButton();
         /* 시작, 도움말 버튼 */

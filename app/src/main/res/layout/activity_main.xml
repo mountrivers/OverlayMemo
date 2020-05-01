@@ -14,8 +14,9 @@
         android:background="#FFFFFFFF"
         android:orientation="horizontal"
         android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/adView">
 
         <Button
             android:id="@+id/main_fontsize_up"
@@ -111,7 +112,7 @@
         android:id="@+id/main_seeMemo"
         android:layout_width="328dp"
         android:layout_height="150dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="76dp"
         android:background="#FAFAFF"
         android:fontFamily="sans-serif"
         android:gravity="center"
@@ -123,6 +124,7 @@
         android:textStyle="normal"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_buttonSet"
         tools:text="You have to have confidence in your ability, and then be tough enough to follow through." />
@@ -142,8 +144,10 @@
         android:id="@+id/view"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
+        android:layout_marginTop="1dp"
         android:background="@drawable/layout_background"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_buttonSet" />
 
@@ -188,5 +192,15 @@
         android:text="MemoSlot / 메모번호"
         app:layout_constraintBottom_toTopOf="@+id/radioset"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/adView"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

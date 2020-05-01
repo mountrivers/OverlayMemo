@@ -5,7 +5,7 @@ android {
     buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "com.sanha.overlaymemo"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 29
         versionCode 9
         versionName "3.201"
@@ -33,11 +33,11 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
     //생명주기를 공유하기 위한 라이브러리
-    implementation "androidx.appcompat:appcompat:1.0.2"
+    implementation "androidx.appcompat:appcompat:1.1.0"
 //LiveData를 사용하기 위한 라이브러리
-    implementation "androidx.lifecycle:lifecycle-viewmodel:2.0.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:2.2.0"
 
-    implementation 'com.google.android.gms:play-services-ads:18.3.0'
+    implementation 'com.google.android.gms:play-services-ads:19.1.0'
     implementation 'com.google.android.material:material:1.1.0'
 
     implementation 'com.github.yukuku:ambilwarna:2.0.1'
