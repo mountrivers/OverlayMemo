@@ -22,6 +22,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -95,6 +96,8 @@ public class MyService extends Service {
         loadText();
 
         alterSize();
+
+        editTextViewr();
 
         initializeNotification();
     }
@@ -313,6 +316,25 @@ public class MyService extends Service {
         r = getResources();
         return Math.round(TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, textWidth, r.getDisplayMetrics()));
+    }
+    protected  void editTextViewr() {
+
+        floatingText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                if(hasFocus){
+                    System.out.println("foucused");
+                    imm.showSoftInput(floatingText,0);
+                }
+                else{
+                    System.out.println("OutFocussed");
+                    imm.hideSoftInputFromWindow(floatingText.getWindowToken(),0);
+                }
+
+            }
+        });
+
     }
 
     public void initializeNotification() {
