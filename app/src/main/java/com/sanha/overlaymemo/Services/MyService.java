@@ -151,7 +151,14 @@ public class MyService extends Service {
             public void onClick(View v) {
                 if ((params.flags & WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE) != 0)
                     params.flags -= WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+
+
+
+
                 wm.updateViewLayout(mView, params);
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                floatingText.requestFocus();
+                imm.showSoftInput(floatingText,0);
             }
         });
 
@@ -318,22 +325,6 @@ public class MyService extends Service {
                 TypedValue.COMPLEX_UNIT_DIP, textWidth, r.getDisplayMetrics()));
     }
     protected  void editTextViewr() {
-
-        floatingText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                if(hasFocus){
-                    System.out.println("foucused");
-                    imm.showSoftInput(floatingText,0);
-                }
-                else{
-                    System.out.println("OutFocussed");
-                    imm.hideSoftInputFromWindow(floatingText.getWindowToken(),0);
-                }
-
-            }
-        });
 
     }
 
