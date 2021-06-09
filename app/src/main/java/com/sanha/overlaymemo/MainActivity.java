@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mainActivity = this;
         /* 전면광고 부착 */
-        mInterstitialAd = IDManger.SetPopUpAd(this);
+        //mInterstitialAd = IDManger.SetPopUpAd(this);
         bannerAd = findViewById(R.id.adView);
         IDManger.SetBannerAd(this,bannerAd);
         /* 사이즈 조절 버튼 */
@@ -230,6 +230,7 @@ public class MainActivity extends AppCompatActivity {
         serviceIntent.putExtra("textwidth", getSelectedManager().getPixel());
         serviceIntent.putExtra("color",getSelectedManager().getBackGroundColor());
 
+        /* 전면 광고 포기, 배너 광고만 사용
         if (mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
             mInterstitialAd.setAdListener(new AdListener() {
@@ -239,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-        else
+        else*/
             startService(serviceIntent);
 
     }
